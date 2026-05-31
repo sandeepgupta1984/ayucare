@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>AyuCare — v3 Full Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Lora:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{
+  --teal:#1D9E75;--teal-l:#E1F5EE;--teal-d:#0F6E56;
+  --red:#A32D2D;--red-l:#FCEBEB;--red-m:#F7C1C1;
+  --amber:#BA7517;--amber-l:#FAEEDA;
+  --blue:#185FA5;--blue-l:#E6F1FB;
+  --purple:#534AB7;--purple-l:#EEEDFE;
+  --green:#3B6D11;--green-l:#EAF3DE;
+  --bg:#F5F4EF;--card:#fff;--border:#E4E3DC;
+  --text:#0D0D0D;--muted:#8C8C84;
+  --f:'Outfit',sans-serif;
+  --r:14px;--rl:18px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:#111;font-family:var(--f);overscroll-behavior:none}
+
+/* ── SHELL ── */
+.shell{max-width:390px;margin:0 auto;height:100dvh;background:var(--bg);display:flex;flex-direction:column;overflow:hidden;position:relative}
+.sb{background:var(--card);padding:13px 20px 6px;display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:700;color:var(--text);flex-shrink:0;z-index:10}
+.scr{display:none;flex-direction:column;flex:1;overflow:hidden;animation:fi .18s ease}
+.scr.on{display:flex}
+@keyframes fi{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
+.sl{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.sl::-webkit-scrollbar{display:none}
+.sp{padding:14px 16px 90px;display:flex;flex-direction:column;gap:11px}
+.hdr{background:var(--card);padding:14px 18px 16px;border-bottom:1px solid var(--border);flex-shrink:0}
+.hdr-row{display:flex;justify-content:space-between;align-items:center}
+.htag{font-size:10px;font-weight:800;color:var(--teal);letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px}
+.hdr h1{font-size:21px;font-weight:800;color:var(--text);line-height:1.2}
+.hdr p{font-size:12px;color:var(--muted);margin-top:3px}
+.nav{background:var(--card);border-top:1px solid var(--border);display:flex;padding:6px 0 18px;flex-shrink:0;z-index:50}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:5px 0;border:none;background:none}
+.nb svg{width:22px;height:22px;stroke:#C2C1B9;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:stroke .15s}
+.nb span{font-size:10px;color:#C2C1B9;font-weight:700;transition:color .15s}
+.nb.on svg{stroke:var(--teal)}.nb.on span{color:var(--teal)}
+.card{background:var(--card);border-radius:var(--rl);padding:14px 16px;border:1px solid var(--border)}
+.card-s{border-radius:var(--r);padding:12px 14px}
+.sec-l{font-size:10px;font-weight:800;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-top:3px}
+
+/* ── EP BANNER ── */
+.epb{background:var(--red);border-radius:var(--rl);padding:15px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:transform .12s}
+.epb:active{transform:scale(.98)}
+.epb-ic{width:44px;height:44px;background:rgba(255,255,255,.18);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.epb-ic svg{width:24px;height:24px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round}
+.epb h3{font-size:14px;font-weight:800;color:#fff}.epb p{font-size:11px;color:rgba(255,255,255,.72);margin-top:2px}
+
+/* ── PARENT ── */
+.pc{cursor:pointer;transition:transform .12s}.pc:active{transform:scale(.99)}
+.ph{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.av{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;flex-shrink:0}
+.av-t{background:var(--teal-l);color:var(--teal-d)}.av-b{background:var(--blue-l);color:var(--blue)}
+.pn{font-size:15px;font-weight:800;color:var(--text)}.ps{font-size:11px;color:var(--muted);margin-top:2px}
+.sr{display:flex;gap:8px}
+.sb2{flex:1;background:var(--bg);border-radius:10px;padding:10px;text-align:center}
+.sbn{font-size:19px;font-weight:800;color:var(--text)}.sbl{font-size:10px;color:var(--muted);margin-top:2px;font-weight:700}
+.sbl.t{color:var(--teal)}.sbl.a{color:var(--amber)}.sbl.r{color:var(--red)}
+
+/* ── QUICK GRID ── */
+.qg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.qc{background:var(--card);border-radius:14px;padding:14px;border:1px solid var(--border);cursor:pointer;display:flex;flex-direction:column;gap:8px;transition:transform .12s}
+.qc:active{transform:scale(.97)}
+.qi{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center}
+.qi svg{width:20px;height:20px;fill:none;stroke-width:2;stroke-linecap:round}
+.qi-t{background:var(--teal-l)}.qi-t svg{stroke:var(--teal-d)}
+.qi-a{background:var(--amber-l)}.qi-a svg{stroke:var(--amber)}
+.qi-b{background:var(--blue-l)}.qi-b svg{stroke:var(--blue)}
+.qi-p{background:var(--purple-l)}.qi-p svg{stroke:var(--purple)}
+.qi-r{background:var(--red-l)}.qi-r svg{stroke:var(--red)}
+.qc h4{font-size:13px;font-weight:800;color:var(--text);line-height:1.3}.qc p{font-size:11px;color:var(--muted);line-height:1.4}
+
+/* ── DOCS ── */
+.di{background:var(--card);border-radius:12px;padding:12px 14px;border:1px solid var(--border);display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .12s}
+.di:active{transform:scale(.99)}
+.dic{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.dic svg{width:20px;height:20px;fill:none;stroke-width:2;stroke-linecap:round}
+.d-lab{background:var(--blue-l)}.d-lab svg{stroke:var(--blue)}
+.d-rx{background:var(--green-l)}.d-rx svg{stroke:var(--green)}
+.d-sc{background:var(--purple-l)}.d-sc svg{stroke:var(--purple)}
+.d-lt{background:var(--amber-l)}.d-lt svg{stroke:var(--amber)}
+.dn{font-size:13px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dm{font-size:11px;color:var(--muted);margin-top:2px}
+.bdg{font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;flex-shrink:0}
+.b-lab{background:var(--blue-l);color:#0C447C}.b-rx{background:var(--green-l);color:#27500A}
+.b-sc{background:var(--purple-l);color:#3C3489}.b-lt{background:var(--amber-l);color:#633806}
+.b-new{background:#0D0D0D;color:#fff}
+
+/* ── SEARCH BAR ── */
+.srch{background:var(--bg);border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:8px;border:1px solid var(--border)}
+.srch svg{width:16px;height:16px;stroke:var(--muted);fill:none;stroke-width:2;stroke-linecap:round;flex-shrink:0}
+.srch input{border:none;background:none;font-size:13px;color:var(--text);flex:1;outline:none;font-family:var(--f)}
+.srch input::placeholder{color:var(--muted)}
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
+.chips::-webkit-scrollbar{display:none}
+.chip{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap;cursor:pointer;border:1px solid var(--border);background:var(--card);color:var(--muted);transition:all .15s}
+.chip.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+
+/* ════════════════════════════════════
+   EMERGENCY PASSPORT (ENHANCED)
+════════════════════════════════════ */
+.eph{background:var(--red);padding:18px 20px 0;flex-shrink:0}
+.eph-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.bk{display:flex;align-items:center;gap:4px;font-size:13px;color:rgba(255,255,255,.75);cursor:pointer;background:none;border:none;font-family:var(--f)}
+.bk svg{width:16px;height:16px;stroke:rgba(255,255,255,.75);fill:none;stroke-width:2;stroke-linecap:round}
+.live{background:rgba(255,255,255,.18);color:#fff;font-size:10px;font-weight:800;padding:4px 10px;border-radius:20px;letter-spacing:.08em;display:flex;align-items:center;gap:5px}
+.ld{width:7px;height:7px;border-radius:50%;background:#5effb8;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.eph h2{font-size:20px;font-weight:800;color:#fff}
+.eph-sub{font-size:12px;color:rgba(255,255,255,.7);margin-top:3px;margin-bottom:14px}
+
+/* ONE-CLICK SHARE STRIP */
+.share-strip{display:flex;gap:8px;padding:14px 20px;background:rgba(0,0,0,.25);flex-shrink:0}
+.share-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;transition:transform .12s}
+.share-btn:active{transform:scale(.94)}
+.share-btn-ic{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center}
+.share-btn-ic svg{width:20px;height:20px;fill:none;stroke-width:2;stroke-linecap:round}
+.share-btn span{font-size:10px;font-weight:700;color:rgba(255,255,255,.8);text-align:center}
+.sic-wa{background:#25D366}.sic-wa svg{stroke:#fff}
+.sic-pdf{background:#fff}.sic-pdf svg{stroke:var(--red)}
+.sic-link{background:rgba(255,255,255,.2)}.sic-link svg{stroke:#fff}
+.sic-more{background:rgba(255,255,255,.12)}.sic-more svg{stroke:rgba(255,255,255,.8)}
+
+/* EP TABS */
+.etabs{display:flex;background:rgba(255,255,255,.15);border-radius:10px 10px 0 0;padding:3px 3px 0;margin:0;gap:2px}
+.etab{flex:1;text-align:center;padding:7px;font-size:11px;font-weight:700;color:rgba(255,255,255,.65);border-radius:8px 8px 0 0;cursor:pointer;font-family:var(--f);transition:all .15s}
+.etab.on{background:var(--bg);color:var(--red)}
+
+/* EP BODY */
+.ep-body{flex:1;overflow-y:auto;padding:14px 16px 90px;display:flex;flex-direction:column;gap:11px}
+.ep-body::-webkit-scrollbar{display:none}
+.epc{background:var(--red-l);border-radius:14px;padding:14px 16px;border:1px solid var(--red-m)}
+.ecl{font-size:10px;font-weight:800;color:var(--red);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.ecl svg{width:14px;height:14px;stroke:var(--red);fill:none;stroke-width:2.5;stroke-linecap:round}
+.ecg{display:flex;gap:8px;margin-bottom:10px}
+.ecp{flex:1;background:#fff;border-radius:10px;padding:10px;border:1px solid var(--red-m)}
+.ecpl{font-size:10px;color:var(--red);font-weight:800;letter-spacing:.04em}
+.ecpv{font-size:18px;font-weight:800;color:#791F1F;margin-top:2px}
+.at{background:#fff;border:1px solid var(--red-m);border-radius:8px;padding:8px 10px;font-size:12px;font-weight:700;color:#791F1F;display:flex;align-items:center;gap:6px;margin-bottom:5px}
+.at svg{width:14px;height:14px;stroke:var(--red);fill:none;stroke-width:2.5;stroke-linecap:round;flex-shrink:0}
+
+/* EP DOCUMENT BUNDLE */
+.doc-bundle{border-radius:14px;border:1px solid var(--border);overflow:hidden}
+.db-header{background:var(--text);padding:12px 14px;display:flex;align-items:center;justify-content:space-between}
+.db-header h4{font-size:12px;font-weight:800;color:#fff;letter-spacing:.04em}
+.db-count{background:var(--teal);color:#fff;font-size:10px;font-weight:800;padding:3px 8px;border-radius:20px}
+.db-item{background:var(--card);padding:11px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border)}
+.db-item:last-child{border-bottom:none}
+.db-ic{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.db-ic svg{width:16px;height:16px;fill:none;stroke-width:2;stroke-linecap:round}
+.db-name{font-size:12px;font-weight:700;color:var(--text);flex:1}
+.db-date{font-size:10px;color:var(--muted)}
+.db-chk{width:22px;height:22px;border-radius:50%;background:var(--green-l);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.db-chk svg{width:12px;height:12px;stroke:var(--green);fill:none;stroke-width:2.5;stroke-linecap:round}
+.db-add{background:var(--bg);border:1.5px dashed var(--border);border-radius:14px;padding:12px 14px;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer}
+.db-add span{font-size:12px;font-weight:700;color:var(--muted)}
+
+/* MED ROWS */
+.mr{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f4f4f0}
+.mr:last-child{border-bottom:none}
+.mrn{font-size:13px;font-weight:700;color:var(--text)}.mrc{font-size:11px;color:var(--muted);margin-top:2px}
+.mrt{font-size:11px;font-weight:700;color:var(--teal)}
+.cr{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #f4f4f0}
+.cr:last-child{border-bottom:none}
+.cav{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0}
+.cv-t{background:var(--teal-l);color:var(--teal-d)}.cv-b{background:var(--blue-l);color:var(--blue)}.cv-a{background:var(--amber-l);color:var(--amber)}
+.cn{font-size:13px;font-weight:700;color:var(--text)}.crel{font-size:11px;color:var(--muted)}
+.cbtn{background:var(--green-l);border-radius:8px;padding:7px 12px;font-size:11px;font-weight:800;color:var(--green);display:flex;align-items:center;gap:5px;cursor:pointer;border:none;font-family:var(--f)}
+.cbtn svg{width:14px;height:14px;stroke:var(--green);fill:none;stroke-width:2.5;stroke-linecap:round}
+
+/* ════════════════════════════════════
+   AI SCANNER (NEW)
+════════════════════════════════════ */
+.scanner-scr{background:#0a0a0a}
+.scan-hdr{background:#0a0a0a;padding:16px 20px 14px;flex-shrink:0}
+.scan-hdr-row{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.scan-tag{font-size:10px;font-weight:800;color:var(--teal);letter-spacing:.1em;text-transform:uppercase}
+.scan-hdr h1{font-size:20px;font-weight:800;color:#fff}
+.scan-hdr p{font-size:12px;color:#666;margin-top:3px}
+
+/* UPLOAD ZONE */
+.upload-zone{margin:0 16px;border:2px dashed #2a2a2a;border-radius:20px;padding:30px 20px;display:flex;flex-direction:column;align-items:center;gap:12px;cursor:pointer;transition:border-color .2s,background .2s;position:relative}
+.upload-zone.drag{border-color:var(--teal);background:rgba(29,158,117,.06)}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.uz-ic{width:64px;height:64px;border-radius:18px;background:#1a1a1a;display:flex;align-items:center;justify-content:center}
+.uz-ic svg{width:32px;height:32px;stroke:var(--teal);fill:none;stroke-width:1.8;stroke-linecap:round}
+.uz-title{font-size:15px;font-weight:800;color:#fff;text-align:center}
+.uz-sub{font-size:12px;color:#555;text-align:center;line-height:1.5}
+.uz-or{font-size:11px;color:#444;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+
+/* SCAN METHOD PILLS */
+.scan-methods{display:flex;gap:8px;padding:14px 16px 0;flex-shrink:0}
+.sm-pill{flex:1;background:#1a1a1a;border-radius:12px;padding:12px 10px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;border:1.5px solid #1a1a1a;transition:all .15s}
+.sm-pill.on{border-color:var(--teal);background:rgba(29,158,117,.08)}
+.sm-pill svg{width:22px;height:22px;fill:none;stroke-width:2;stroke-linecap:round}
+.sm-pill span{font-size:10px;font-weight:700;color:#666}
+.sm-pill.on span{color:var(--teal)}
+.sm-c svg{stroke:#888}.sm-c.on svg{stroke:var(--teal)}
+.sm-g svg{stroke:#888}.sm-g.on svg{stroke:var(--teal)}
+.sm-f svg{stroke:#888}.sm-f.on svg{stroke:var(--teal)}
+
+/* IMAGE PREVIEW */
+.img-preview{margin:0 16px;border-radius:16px;overflow:hidden;position:relative;display:none;max-height:220px}
+.img-preview img{width:100%;height:220px;object-fit:cover;display:block}
+.img-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.7),transparent);display:flex;align-items:flex-end;padding:12px}
+.img-tag{background:var(--teal);color:#fff;font-size:10px;font-weight:800;padding:4px 10px;border-radius:20px;letter-spacing:.06em}
+.retake-btn{margin-left:auto;background:rgba(255,255,255,.2);color:#fff;font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;cursor:pointer;border:none;font-family:var(--f)}
+
+/* AI PROCESSING STATES */
+.ai-process-box{margin:0 16px;background:#111;border-radius:16px;padding:16px;border:1px solid #222;display:none}
+.apb-step{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid #1a1a1a}
+.apb-step:last-child{border-bottom:none}
+.step-ic{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step-label{font-size:12px;color:#666;flex:1}
+.step-label.done{color:#aaa}
+.step-label.active{color:var(--teal)}
+.step-spin{width:16px;height:16px;border:2px solid #333;border-top-color:var(--teal);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.step-done{width:16px;height:16px;flex-shrink:0}
+.step-done svg{width:16px;height:16px;stroke:var(--teal);fill:none;stroke-width:2.5;stroke-linecap:round}
+
+/* EXTRACTED CARD */
+.extracted-card{margin:0 16px;background:#111;border-radius:16px;padding:16px;border:1px solid #222;display:none}
+.ec-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(29,158,117,.15);border:1px solid rgba(29,158,117,.3);border-radius:20px;padding:5px 12px;font-size:11px;font-weight:800;color:var(--teal);margin-bottom:12px}
+.ec-badge svg{width:12px;height:12px;stroke:var(--teal);fill:none;stroke-width:2.5;stroke-linecap:round}
+.ec-title{font-size:16px;font-weight:800;color:#fff;margin-bottom:4px}
+.ec-sub{font-size:12px;color:#666;margin-bottom:14px}
+.ec-field{background:#1a1a1a;border-radius:10px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:10px}
+.ec-field:last-of-type{margin-bottom:0}
+.ecf-label{font-size:10px;font-weight:800;color:#555;letter-spacing:.06em;text-transform:uppercase;min-width:90px;flex-shrink:0}
+.ecf-val{font-size:13px;font-weight:700;color:#e0e0e0;flex:1}
+.ecf-flag{font-size:10px;font-weight:800;padding:2px 8px;border-radius:6px;flex-shrink:0}
+.flag-hi{background:rgba(186,117,23,.2);color:#EF9F27}
+.flag-lo{background:rgba(163,45,45,.2);color:#F09595}
+.flag-ok{background:rgba(29,158,117,.15);color:var(--teal)}
+
+/* AI INSIGHTS */
+.ai-insight-box{background:#0E1A14;border:1px solid rgba(29,158,117,.25);border-radius:12px;padding:12px 14px}
+.aib-label{font-size:10px;font-weight:800;color:var(--teal);letter-spacing:.07em;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.aib-label svg{width:12px;height:12px;stroke:var(--teal);fill:none;stroke-width:2.5;stroke-linecap:round}
+.aib-text{font-size:12px;color:#aaa;line-height:1.65}
+.aib-text strong{color:#5effb8}
+
+/* ACTION BTNS */
+.action-row{display:flex;gap:8px;margin:0 16px}
+.act-btn{flex:1;padding:13px;border-radius:12px;font-size:13px;font-weight:800;cursor:pointer;border:none;font-family:var(--f);transition:transform .1s}
+.act-btn:active{transform:scale(.97)}
+.act-save{background:var(--teal);color:#fff}
+.act-rescan{background:#1a1a1a;color:#888;border:1px solid #2a2a2a}
+
+/* SCAN HISTORY */
+.sh-item{background:#111;border-radius:12px;padding:12px 14px;border:1px solid #1e1e1e;display:flex;align-items:center;gap:10px}
+.sh-ic{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sh-ic svg{width:18px;height:18px;fill:none;stroke-width:2;stroke-linecap:round}
+.sh-name{font-size:13px;font-weight:700;color:#e0e0e0}
+.sh-meta{font-size:11px;color:#555;margin-top:2px}
+.sh-tag{font-size:10px;font-weight:800;padding:3px 8px;border-radius:6px;flex-shrink:0}
+
+/* ── MEDS SCREEN ── */
+.mhdr{background:var(--amber);padding:18px 20px 20px;flex-shrink:0}
+.mhdr h2{font-size:20px;font-weight:800;color:#fff}.mhdr p{font-size:12px;color:rgba(255,255,255,.72);margin-top:3px}
+.dc{background:var(--bg);border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.dt{background:var(--amber-l);color:#854F0B;font-size:10px;font-weight:800;padding:4px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0}
+.dbn{font-size:13px;font-weight:700;color:var(--text)}.dbc{font-size:11px;color:var(--muted)}
+.chk{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;flex-shrink:0;transition:all .15s}
+.chk svg{width:16px;height:16px;fill:none;stroke-width:2.5;stroke-linecap:round}
+.ck-y{background:var(--green-l)}.ck-y svg{stroke:var(--green)}
+.ck-n{background:#f0f0ec;border:2px solid #ddd}.ck-n svg{stroke:#ccc}
+.cfbox{background:var(--amber-l);border-radius:12px;padding:12px 14px;border:1px solid #FAC775;display:flex;gap:10px}
+.cfbox svg{width:18px;height:18px;stroke:var(--amber);fill:none;stroke-width:2;stroke-linecap:round;flex-shrink:0;margin-top:1px}
+.cfbox h4{font-size:12px;font-weight:800;color:#633806}.cfbox p{font-size:11px;color:#854F0B;margin-top:2px;line-height:1.5}
+
+/* ── TIMELINE ── */
+.tli{display:flex;gap:12px}
+.tll{display:flex;flex-direction:column;align-items:center;width:20px;flex-shrink:0}
+.tld{width:11px;height:11px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.tlln{width:2px;background:#e0e0da;flex:1;margin-top:5px}
+.tlc{flex:1;background:var(--card);border-radius:12px;padding:12px 14px;border:1px solid var(--border);margin-bottom:10px;cursor:pointer}
+.tdate{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.05em;text-transform:uppercase}
+.ttitle{font-size:14px;font-weight:800;color:var(--text);margin-top:3px}
+.tdesc{font-size:11px;color:#666;margin-top:4px;line-height:1.55}
+.ttag{display:inline-block;font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;margin-top:7px}
+
+/* ── AI PANEL ── */
+.ai-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;align-items:flex-end;justify-content:center}
+.ai-ov.on{display:flex;animation:fi .18s}
+.ai-panel{background:#0E0E0E;border-radius:24px 24px 0 0;width:100%;max-width:390px;max-height:88vh;display:flex;flex-direction:column;animation:su .24s cubic-bezier(.22,1,.36,1)}
+@keyframes su{from{transform:translateY(60px);opacity:0}to{transform:translateY(0);opacity:1}}
+.ai-handle{width:36px;height:4px;background:#333;border-radius:2px;margin:12px auto 0;flex-shrink:0}
+.ai-hdr{padding:14px 18px 12px;border-bottom:1px solid #1e1e1e;flex-shrink:0;display:flex;align-items:center;gap:10px}
+.ai-dot{width:8px;height:8px;border-radius:50%;background:var(--teal);animation:pulse 1.5s infinite;flex-shrink:0}
+.ai-hdr h3{font-size:15px;font-weight:800;color:#fff;flex:1}
+.ai-close{background:#1a1a1a;border:none;color:#888;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center}
+.ai-ctx{background:#161616;margin:12px 16px;border-radius:10px;padding:10px 12px;border:1px solid #222}
+.ai-ctx-l{font-size:10px;font-weight:800;color:#444;letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px}
+.ai-ctx-v{font-size:12px;color:#888;line-height:1.4}
+.ai-msgs{flex:1;overflow-y:auto;padding:0 16px 12px;display:flex;flex-direction:column;gap:10px}
+.ai-msgs::-webkit-scrollbar{display:none}
+.msg{max-width:88%;padding:10px 13px;border-radius:16px;font-size:13px;line-height:1.6}
+.msg-u{background:var(--teal);color:#fff;align-self:flex-end;border-radius:16px 16px 4px 16px}
+.msg-a{background:#1a1a1a;color:#e0e0e0;align-self:flex-start;border-radius:16px 16px 16px 4px;border:1px solid #2a2a2a}
+.msg-a strong{color:#5effb8}
+.typing{display:flex;gap:4px;align-items:center;padding:6px 0}
+.typing span{width:7px;height:7px;border-radius:50%;background:#444;animation:bounce .9s infinite}
+.typing span:nth-child(2){animation-delay:.15s}.typing span:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-6px)}}
+.ai-inp{border-top:1px solid #1e1e1e;padding:12px 16px 24px;display:flex;gap:8px;flex-shrink:0}
+.ai-inp input{flex:1;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:24px;padding:10px 16px;font-size:13px;color:#fff;outline:none;font-family:var(--f)}
+.ai-inp input::placeholder{color:#555}
+.ai-inp input:focus{border-color:var(--teal)}
+.send-btn{background:var(--teal);border:none;border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
+.send-btn svg{width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round}
+.sugg-row{display:flex;gap:6px;flex-wrap:wrap;padding:0 16px 10px}
+.sugg{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:20px;padding:5px 12px;font-size:11px;color:#888;cursor:pointer;white-space:nowrap;font-family:var(--f)}
+.sugg:hover{border-color:var(--teal);color:var(--teal)}
+
+/* SHARE MODAL */
+.share-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:350;align-items:flex-end;justify-content:center}
+.share-ov.on{display:flex;animation:fi .16s}
+.share-panel{background:#fff;border-radius:24px 24px 0 0;width:100%;max-width:390px;padding:0 0 32px;animation:su .22s cubic-bezier(.22,1,.36,1)}
+.share-panel-hdr{padding:16px 20px 14px;border-bottom:1px solid var(--border)}
+.share-panel-hdr h3{font-size:17px;font-weight:800;color:var(--text)}
+.share-panel-hdr p{font-size:12px;color:var(--muted);margin-top:3px}
+.share-opts{padding:16px 20px;display:flex;flex-direction:column;gap:10px}
+.share-opt{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;border:1px solid var(--border);cursor:pointer;transition:all .12s}
+.share-opt:active{transform:scale(.99)}
+.so-ic{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.so-ic svg{width:22px;height:22px;fill:none;stroke-width:2;stroke-linecap:round}
+.so-info h4{font-size:14px;font-weight:800;color:var(--text)}
+.so-info p{font-size:11px;color:var(--muted);margin-top:2px}
+.so-wa .so-ic{background:#E7FAF0}.so-wa .so-ic svg{stroke:#25D366}
+.so-pdf .so-ic{background:var(--red-l)}.so-pdf .so-ic svg{stroke:var(--red)}
+.so-link .so-ic{background:var(--blue-l)}.so-link .so-ic svg{stroke:var(--blue)}
+.so-email .so-ic{background:var(--purple-l)}.so-email .so-ic svg{stroke:var(--purple)}
+.doc-sel-section{padding:0 20px}
+.doc-sel-label{font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px}
+.doc-toggle{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)}
+.doc-toggle:last-child{border-bottom:none}
+.doc-toggle-name{font-size:13px;font-weight:600;color:var(--text);flex:1}
+.doc-toggle-date{font-size:11px;color:var(--muted)}
+.toggle-sw{width:40px;height:24px;background:var(--teal);border-radius:12px;position:relative;cursor:pointer;flex-shrink:0;transition:background .2s}
+.toggle-sw::after{content:'';position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:right .2s}
+.toggle-sw.off{background:#ddd}
+.toggle-sw.off::after{right:auto;left:3px}
+.share-go-btn{margin:14px 20px 0;width:calc(100% - 40px);padding:15px;background:var(--red);border:none;border-radius:14px;font-size:15px;font-weight:800;color:#fff;cursor:pointer;font-family:var(--f)}
+
+/* TOAST */
+.toast-el{position:fixed;bottom:88px;left:50%;transform:translateX(-50%);background:#111;color:#fff;border-radius:12px;padding:10px 18px;font-size:12px;font-weight:700;display:none;z-index:500;white-space:nowrap;border:1px solid #222}
+.toast-el.on{display:block;animation:su .2s}
+.hdl{width:36px;height:4px;background:#ddd;border-radius:2px;margin:12px auto 0}
+</style>
+</head>
+<body>
+<div class="shell">
+  <!-- STATUS BAR -->
+  <div class="sb">
+    <span>9:41</span>
+    <div style="display:flex;gap:5px;align-items:center">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="2" y="7" width="4" height="14" rx="1"/><rect x="9" y="4" width="4" height="17" rx="1"/><rect x="16" y="1" width="4" height="20" rx="1"/></svg>
+      <svg width="18" height="12" viewBox="0 0 24 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="1" y="1" width="18" height="10" rx="2"/><rect x="3" y="3" width="11" height="6" rx="1" fill="currentColor"/><path d="M21 4v4" stroke-width="2.5"/></svg>
+    </div>
+  </div>
+
+  <!-- ═══════ HOME ═══════ -->
+  <div class="scr on" id="sc-home">
+    <div class="hdr">
+      <div class="hdr-row">
+        <div><div class="htag">AyuCare</div><h1>Good morning, Raj 👋</h1><p>2 parents · 3 alerts today</p></div>
+        <div class="av av-t" style="width:32px;height:32px;font-size:11px">RK</div>
+      </div>
+    </div>
+    <div class="sl"><div class="sp">
+      <div class="epb" onclick="go('sc-ep')">
+        <div class="epb-ic"><svg viewBox="0 0 24 24"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z"/><line x1="12" y1="9" x2="12" y2="13"/><circle cx="12" cy="17" r=".5" fill="#fff"/></svg></div>
+        <div><h3>Emergency Passport</h3><p>One-click share · All docs ready</p></div>
+        <span style="margin-left:auto;color:rgba(255,255,255,.5);font-size:22px">›</span>
+      </div>
+      <div class="sec-l">Your parents</div>
+      <div class="card pc" onclick="go('sc-vault')">
+        <div class="ph">
+          <div class="av av-t">SM</div>
+          <div><div class="pn">Sunita Mehta</div><div class="ps">Mum · 68 yrs · Active 2h ago</div></div>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2.5" stroke-linecap="round" style="margin-left:auto;flex-shrink:0"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+        <div class="sr">
+          <div class="sb2"><div class="sbn">24</div><div class="sbl t">Records</div></div>
+          <div class="sb2"><div class="sbn">3</div><div class="sbl a">Meds</div></div>
+          <div class="sb2"><div class="sbn">1</div><div class="sbl r">Alert</div></div>
+        </div>
+      </div>
+      <div class="card pc">
+        <div class="ph">
+          <div class="av av-b">VM</div>
+          <div><div class="pn">Vijay Mehta</div><div class="ps">Dad · 71 yrs · Active 5h ago</div></div>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2.5" stroke-linecap="round" style="margin-left:auto;flex-shrink:0"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+        <div class="sr">
+          <div class="sb2"><div class="sbn">31</div><div class="sbl t">Records</div></div>
+          <div class="sb2"><div class="sbn">5</div><div class="sbl a">Meds</div></div>
+          <div class="sb2"><div class="sbn">2</div><div class="sbl r">Alerts</div></div>
+        </div>
+      </div>
+      <div class="sec-l">Quick actions</div>
+      <div class="qg">
+        <div class="qc" onclick="go('sc-scanner')">
+          <div class="qi qi-t"><svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
+          <h4>AI Scanner</h4><p>Scan & extract any document</p>
+        </div>
+        <div class="qc" onclick="go('sc-ep');setTimeout(()=>openShareModal(),300)">
+          <div class="qi qi-r"><svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></div>
+          <h4>Share EP</h4><p>Send to doctor instantly</p>
+        </div>
+        <div class="qc" onclick="go('sc-vault')">
+          <div class="qi qi-b"><svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></div>
+          <h4>Health Vault</h4><p>All 24 records</p>
+        </div>
+        <div class="qc" onclick="go('sc-meds')">
+          <div class="qi qi-a"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 12h6M12 9v6"/></svg></div>
+          <h4>Medications</h4><p>Today's schedule</p>
+        </div>
+      </div>
+      <div class="sec-l">Recent activity</div>
+      <div class="card card-s">
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #f4f4f0"><div style="width:8px;height:8px;border-radius:50%;background:var(--teal);flex-shrink:0"></div><div style="flex:1;font-size:12px;color:var(--text)">AI scanned <strong>CBC Report</strong> — 3 values extracted</div><span style="font-size:10px;color:var(--muted)">1h ago</span></div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #f4f4f0"><div style="width:8px;height:8px;border-radius:50%;background:var(--blue);flex-shrink:0"></div><div style="flex:1;font-size:12px;color:var(--text)">EP shared with <strong>Dr. Sharma</strong> via WhatsApp</div><span style="font-size:10px;color:var(--muted)">2h ago</span></div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0"><div style="width:8px;height:8px;border-radius:50%;background:var(--amber);flex-shrink:0"></div><div style="flex:1;font-size:12px;color:var(--text)">Dad missed <strong>Aspirin</strong> last evening</div><span style="font-size:10px;color:var(--muted)">14h ago</span></div>
+      </div>
+    </div></div>
+    <nav class="nav">
+      <button class="nb on" onclick="go('sc-home')"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></button>
+      <button class="nb" onclick="go('sc-vault')"><svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg><span>Vault</span></button>
+      <button class="nb" onclick="go('sc-scanner')"><svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg><span>Scanner</span></button>
+      <button class="nb" onclick="go('sc-ep')"><svg viewBox="0 0 24 24"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z"/></svg><span>EP</span></button>
+      <button class="nb" onclick="go('sc-meds')"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg><span>Meds</span></button>
+    </nav>
+  </div>
+
+  <!-- ═══════ VAULT ═══════ -->
+  <div class="scr" id="sc-vault">
+    <div class="hdr">
+      <div class="hdr-row">
+        <div><div class="htag">Health Vault</div><h1>Sunita's Records</h1><p>24 documents · Synced 4 min ago</p></div>
+        <div onclick="go('sc-scanner')" style="width:40px;height:40px;background:var(--teal);border-radius:12px;display:flex;align-items:center;justify-content:center;cursor:pointer" title="AI Scanner">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        </div>
+      </div>
+      <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px">
+        <div class="srch"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input placeholder="Search records…" oninput="filterDocs(this.value)"></div>
+        <div class="chips">
+          <span class="chip on" onclick="chipFilter(this,'all')">All</span>
+          <span class="chip" onclick="chipFilter(this,'lab')">Lab reports</span>
+          <span class="chip" onclick="chipFilter(this,'rx')">Prescriptions</span>
+          <span class="chip" onclick="chipFilter(this,'scan')">Scans</span>
+          <span class="chip" onclick="chipFilter(this,'letter')">Letters</span>
+        </div>
+      </div>
+    </div>
+    <div class="sl"><div class="sp">
+      <div class="sec-l">May 2025</div>
+      <div class="di" data-t="lab" onclick="openAI('doc','Complete Blood Count (CBC) — Apollo Diagnostics, 12 May 2025. Haemoglobin 11.2 g/dL (low, normal 12-16 for women). WBC 7,200/µL (normal). Platelets 210,000/µL (normal). Patient: Sunita Mehta, 68F, Hypertension, Diabetes.')">
+        <div class="dic d-lab"><svg viewBox="0 0 24 24"><path d="M9 3H5a2 2 0 0 0-2 2v4"/><path d="M14 3h4a2 2 0 0 1 2 2v4"/><path d="M3 9a9 9 0 1 0 18 0"/><line x1="9" y1="9" x2="15" y2="9"/></svg></div>
+        <div style="flex:1;min-width:0"><div class="dn">Complete Blood Count</div><div class="dm">Apollo Diagnostics · 12 May 2025</div></div>
+        <span class="bdg b-lab">Lab</span>
+      </div>
+      <div class="di" data-t="rx" onclick="openAI('doc','Prescription — Dr. Ramesh Sharma, Cardiology, Apollo, 9 May 2025. Sunita Mehta 68F. BP 140/90. Amlodipine 5mg OD morning, Losartan 50mg OD night. Follow-up 4 weeks.')">
+        <div class="dic d-rx"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+        <div style="flex:1;min-width:0"><div class="dn">Dr. Sharma — Cardiology Rx</div><div class="dm">Prescription · 9 May 2025</div></div>
+        <span class="bdg b-rx">Rx</span>
+      </div>
+      <div class="sec-l">April 2025</div>
+      <div class="di" data-t="lab" onclick="openAI('doc','HbA1c & Lipid Panel — Thyrocare 15 Apr 2025. HbA1c 7.2%, LDL 145 mg/dL (borderline). HDL 48. Previous HbA1c Oct 2024 was 7.5% — improving.')">
+        <div class="dic d-lab"><svg viewBox="0 0 24 24"><path d="M9 3H5a2 2 0 0 0-2 2v4"/><path d="M14 3h4a2 2 0 0 1 2 2v4"/><path d="M3 9a9 9 0 1 0 18 0"/><line x1="9" y1="9" x2="15" y2="9"/></svg></div>
+        <div style="flex:1;min-width:0"><div class="dn">HbA1c + Lipid Panel</div><div class="dm">Thyrocare · 15 Apr 2025 · ⚠ Prev Oct 2024</div></div>
+        <span class="bdg b-lab">Lab</span>
+      </div>
+      <div class="di" data-t="scan" onclick="openAI('doc','Right Knee X-Ray — Manipal, 22 Apr 2025. Grade 2 osteoarthritis. Moderate joint space narrowing medial compartment. No fracture. Physio 3x/week advised.')">
+        <div class="dic d-sc"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 12h8M12 8v8"/></svg></div>
+        <div style="flex:1;min-width:0"><div class="dn">Knee X-Ray — Right</div><div class="dm">Manipal Hospital · 22 Apr 2025</div></div>
+        <span class="bdg b-sc">Scan</span>
+      </div>
+      <div class="di" data-t="letter" onclick="openAI('doc','Discharge Summary — Fortis 8 Apr 2025. Chest pain, cardiac ruled out. Stress-related. Alprazolam 0.25mg SOS 2 weeks. Follow-up cardiology 4 weeks.')">
+        <div class="dic d-lt"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+        <div style="flex:1;min-width:0"><div class="dn">Discharge Summary — Fortis</div><div class="dm">8 Apr 2025 · AI summary ready ✦</div></div>
+        <span class="bdg b-lt">Letter</span>
+      </div>
+      <div class="sec-l">March 2025</div>
+      <div class="di" data-t="rx">
+        <div class="dic d-rx"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+        <div style="flex:1;min-width:0"><div class="dn">Dr. Iyer — Orthopaedics Rx</div><div class="dm">Prescription · 3 Mar 2025</div></div>
+        <span class="bdg b-rx">Rx</span>
+      </div>
+      <div class="di" data-t="lab">
+        <div class="dic d-lab"><svg viewBox="0 0 24 24"><path d="M9 3H5a2 2 0 0 0-2 2v4"/><path d="M14 3h4a2 2 0 0 1 2 2v4"/><path d="M3 9a9 9 0 1 0 18 0"/><line x1="9" y1="9" x2="15" y2="9"/></svg></div>
+        <div style="flex:1;min-width:0"><div class="dn">Thyroid Function Test (TSH)</div><div class="dm">Metropolis · 18 Mar 2025</div></div>
+        <span class="bdg b-lab">Lab</span>
+      </div>
+      <div style="background:var(--green-l);border-radius:12px;padding:11px 14px;display:flex;align-items:center;gap:10px;cursor:pointer" onclick="go('sc-scanner')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="3"/></svg>
+        <div style="flex:1;font-size:12px;color:var(--green);font-weight:700">Scan a new document with AI</div>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+      </div>
+    </div></div>
+    <nav class="nav">
+      <button class="nb" onclick="go('sc-home')"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></button>
+      <button class="nb on" onclick="go('sc-vault')"><svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg><span>Vault</span></button>
+      <button class="nb" onclick="go('sc-scanner')"><svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg><span>Scanner</span></button>
+      <button class="nb" onclick="go('sc-ep')"><svg viewBox="0 0 24 24"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z"/></svg><span>EP</span></button>
+      <button class="nb" onclick="go('sc-meds')"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg><span>Meds</span></button>
+    </nav>
+  </div>
+
+  <!-- ═══════ AI SCANNER (NEW) ═══════ -->
+  <div class="scr scanner-scr" id="sc-scanner">
+    <div class="scan-hdr">
+      <div class="scan-hdr-row">
+        <button class="bk" style="color:#888" onclick="go('sc-home')"><svg viewBox="0 0 24 24" style="stroke:#888"><polyline points="15 18 9 12 15 6"/></svg>Back</button>
+        <div style="display:flex;gap:6px">
+          <span id="ai-scan-badge" style="display:none;background:rgba(29,158,117,.15);border:1px solid rgba(29,158,117,.3);border-radius:20px;padding:4px 10px;font-size:10px;font-weight:800;color:var(--teal)">✦ AI Ready</span>
+        </div>
+      </div>
+      <h1 style="color:#fff">AI Document Scanner</h1>
+      <p>Photograph or upload any health record — AI extracts and structures the data instantly</p>
+    </div>
+
+    <!-- SCAN METHOD PILLS -->
+    <div class="scan-methods">
+      <div class="sm-pill sm-c on" id="sm-cam" onclick="setMethod('camera',this)">
+        <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        <span>Camera</span>
+      </div>
+      <div class="sm-pill sm-g" id="sm-gal" onclick="setMethod('gallery',this)">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <span>Gallery</span>
+      </div>
+      <div class="sm-pill sm-f" id="sm-file" onclick="setMethod('file',this)">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <span>File / PDF</span>
+      </div>
+    </div>
+
+    <div class="sl" style="background:#0a0a0a"><div style="padding:14px 0 90px;display:flex;flex-direction:column;gap:12px">
+      <!-- UPLOAD ZONE -->
+      <div class="upload-zone" id="upload-zone" ondragover="this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event)">
+        <input type="file" accept="image/*,.pdf" onchange="handleFile(event)" id="file-input">
+        <div class="uz-ic">
+          <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        </div>
+        <div class="uz-title">Tap to scan a document</div>
+        <div class="uz-sub">Lab reports · Prescriptions · Discharge summaries<br>Scan reports · Bills · Insurance cards</div>
+        <div class="uz-or">or drag & drop</div>
+      </div>
+
+      <!-- IMAGE PREVIEW -->
+      <div class="img-preview" id="img-preview">
+        <img id="preview-img" src="" alt="Scanned document">
+        <div class="img-overlay">
+          <span class="img-tag" id="img-tag">Document captured</span>
+          <button class="retake-btn" onclick="resetScanner()">Retake</button>
+        </div>
+      </div>
+
+      <!-- AI PROCESSING STEPS -->
+      <div class="ai-process-box" id="ai-process-box">
+        <div class="apb-step" id="step1">
+          <div class="step-ic" style="background:#1a1a1a"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></div>
+          <span class="step-label" id="step1-l">Analysing image quality…</span>
+          <div class="step-spin" id="step1-s"></div>
+        </div>
+        <div class="apb-step" id="step2" style="opacity:.4">
+          <div class="step-ic" style="background:#1a1a1a"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16"/><path d="M16 13H8M16 17H8M10 9H8"/></svg></div>
+          <span class="step-label" id="step2-l">Reading text & values…</span>
+          <div class="step-spin" id="step2-s" style="display:none"></div>
+        </div>
+        <div class="apb-step" id="step3" style="opacity:.4">
+          <div class="step-ic" style="background:#1a1a1a"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2" stroke-linecap="round"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/></svg></div>
+          <span class="step-label" id="step3-l">AI extracting structured data…</span>
+          <div class="step-spin" id="step3-s" style="display:none"></div>
+        </div>
+        <div class="apb-step" id="step4" style="opacity:.4">
+          <div class="step-ic" style="background:#1a1a1a"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <span class="step-label" id="step4-l">Generating health insights…</span>
+          <div class="step-spin" id="step4-s" style="display:none"></div>
+        </div>
+      </div>
+
+      <!-- EXTRACTED DATA CARD -->
+      <div class="extracted-card" id="extracted-card">
+        <div class="ec-badge"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>AI Extracted Successfully</div>
+        <div class="ec-title" id="ec-title">Document Title</div>
+        <div class="ec-sub" id="ec-sub">Source · Date</div>
+        <div id="ec-fields"></div>
+        <div style="height:10px"></div>
+        <div class="ai-insight-box" id="ai-insight-box">
+          <div class="aib-label"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z"/><path d="M12 8v4M12 16h.01"/></svg>AI Health Insight</div>
+          <div class="aib-text" id="aib-text">Analysing…</div>
+        </div>
+      </div>
+
+      <!-- ACTION BUTTONS -->
+      <div class="action-row" id="action-row" style="display:none">
+        <button class="act-btn act-save" onclick="saveToVault()">Save to Vault ✓</button>
+        <button class="act-btn act-rescan" onclick="resetScanner()">Scan Another</button>
+      </div>
+
+      <!-- SCAN HISTORY -->
+      <div style="padding:0 16px">
+        <div class="sec-l" style="color:#444;margin-bottom:10px">Recently scanned</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div class="sh-item">
+            <div class="sh-ic" style="background:var(--blue-l)"><svg viewBox="0 0 24 24" style="stroke:var(--blue)"><path d="M9 3H5a2 2 0 0 0-2 2v4"/><path d="M14 3h4a2 2 0 0 1 2 2v4"/><path d="M3 9a9 9 0 1 0 18 0"/></svg></div>
+            <div style="flex:1"><div class="sh-name">Complete Blood Count</div><div class="sh-meta">Apollo · Scanned 1h ago · 6 values extracted</div></div>
+            <span class="sh-tag" style="background:var(--blue-l);color:#0C447C">Lab</span>
+          </div>
+          <div class="sh-item">
+            <div class="sh-ic" style="background:var(--green-l)"><svg viewBox="0 0 24 24" style="stroke:var(--green)"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+            <div style="flex:1"><div class="sh-name">Dr. Sharma Prescription</div><div class="sh-meta">Apollo Cardiology · Scanned 2d ago · 3 meds</div></div>
+            <span class="sh-tag" style="background:var(--green-l);color:#27500A">Rx</span>
+          </div>
+          <div class="sh-item">
+            <div class="sh-ic" style="background:var(--amber-l)"><svg viewBox="0 0 24 24" style="stroke:var(--amber)"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+            <div style="flex:1"><div class="sh-name">Fortis Discharge Summary</div><div class="sh-meta">Fortis Hospital · Scanned 5d ago</div></div>
+            <span class="sh-tag" style="background:var(--amber-l);color:#633806">Letter</span>
+          </div>
+        </div>
+      </div>
+    </div></div>
+
+    <nav class="nav" style="background:#111;border-color:#1e1e1e">
+      <button class="nb" onclick="go('sc-home')" style=""><svg viewBox="0 0 24 24" style="stroke:#555"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span style="color:#555">Home</span></button>
+      <button class="nb" onclick="go('sc-vault')"><svg viewBox="0 0 24 24" style="stroke:#555"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg><span style="color:#555">Vault</span></button>
+      <button class="nb on"><svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg><span>Scanner</span></button>
+      <button class="nb" onclick="go('sc-ep')"><svg viewBox="0 0 24 24" style="stroke:#555"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z"/></svg><span style="color:#555">EP</span></button>
+      <button class="nb" onclick="go('sc-meds')"><svg viewBox="0 0 24 24" style="stroke:#555"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg><span style="color:#555">Meds</span></button>
+    </nav>
+  </div>
+
+  <!-- ═══════ EMERGENCY PASSPORT (ENHANCED) ═══════ -->
+  <div class="scr" id="sc-ep">
+    <div class="eph">
+      <div class="eph-top">
+        <button class="bk" onclick="go('sc-home')"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Back</button>
+        <div class="live"><div class="ld"></div>LIVE</div>
+      </div>
+      <h2>Emergency Passport</h2>
+      <div class="eph-sub">Sunita Mehta · B+ · 7 docs attached · Updated 2h ago</div>
+    </div>
+
+    <!-- ONE-CLICK SHARE STRIP -->
+    <div class="share-strip">
+      <div class="share-btn" onclick="openShareModal()">
+        <div class="share-btn-ic sic-wa"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12.05 2A10 10 0 0 0 2 12c0 1.76.46 3.4 1.27 4.84L2 22l5.31-1.35A9.94 9.94 0 0 0 12.05 22C17.55 22 22 17.55 22 12.05 22 6.55 17.55 2 12.05 2z"/></svg></div>
+        <span>WhatsApp</span>
+      </div>
+      <div class="share-btn" onclick="openShareModal()">
+        <div class="share-btn-ic sic-pdf"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+        <span>Export PDF</span>
+      </div>
+      <div class="share-btn" onclick="shareLink()">
+        <div class="share-btn-ic sic-link"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
+        <span>Copy Link</span>
+      </div>
+      <div class="share-btn" onclick="openShareModal()">
+        <div class="share-btn-ic sic-more"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></div>
+        <span>More</span>
+      </div>
+    </div>
+
+    <!-- EP TABS -->
+    <div class="etabs" style="padding:3px 20px 0;background:var(--red)">
+      <div class="etab on" onclick="epTab(this,'ep-med')">Medical</div>
+      <div class="etab" onclick="epTab(this,'ep-docs')">Documents</div>
+      <div class="etab" onclick="epTab(this,'ep-con')">Contacts</div>
+    </div>
+
+    <div class="ep-body">
+      <!-- MEDICAL TAB -->
+      <div id="ep-med">
+        <div class="epc">
+          <div class="ecl"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><circle cx="12" cy="17" r=".5" fill="var(--red)"/></svg>Critical — show to ER doctor first</div>
+          <div class="ecg">
+            <div class="ecp"><div class="ecpl">Blood group</div><div class="ecpv">B+</div></div>
+            <div class="ecp"><div class="ecpl">Insurance</div><div class="ecpv" style="font-size:14px">Medi-Assist</div></div>
+          </div>
+          <div style="font-size:10px;font-weight:800;color:var(--red);letter-spacing:.06em;text-transform:uppercase;margin:8px 0 6px">Allergies</div>
+          <div class="at"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r=".5" fill="var(--red)"/></svg>Penicillin — severe reaction</div>
+          <div class="at"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r=".5" fill="var(--red)"/></svg>Sulfa drugs</div>
+        </div>
+        <div class="card">
+          <div class="sec-l" style="margin-bottom:10px">Current medications</div>
+          <div class="mr"><div><div class="mrn">Amlodipine 5mg</div><div class="mrc">Hypertension</div></div><div class="mrt">Morning</div></div>
+          <div class="mr"><div><div class="mrn">Metformin 500mg</div><div class="mrc">Type 2 Diabetes</div></div><div class="mrt">Twice daily</div></div>
+          <div class="mr"><div><div class="mrn">Calcium 500mg</div><div class="mrc">Bone health</div></div><div class="mrt">After lunch</div></div>
+          <div class="mr"><div><div class="mrn">Thyroxine 50mcg</div><div class="mrc">Hypothyroidism</div></div><div class="mrt">Empty stomach</div></div>
+        </div>
+        <div class="card">
+          <div class="sec-l" style="margin-bottom:10px">Conditions</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <span style="background:var(--blue-l);color:#0C447C;font-size:11px;font-weight:700;padding:5px 10px;border-radius:8px">Hypertension</span>
+            <span style="background:var(--amber-l);color:#633806;font-size:11px;font-weight:700;padding:5px 10px;border-radius:8px">Type 2 Diabetes</span>
+            <span style="background:var(--purple-l);color:#3C3489;font-size:11px;font-weight:700;padding:5px 10px;border-radius:8px">Osteoarthritis</span>
+            <span style="background:var(--teal-l);color:#085041;font-size:11px;font-weight:700;padding:5px 10px;border-radius:8px">Hypothyroidism</span>
+          </div>
+        </div>
+        <div class="card" style="cursor:pointer" onclick="openAI('ep','Sunita Mehta 68F. B+. Allergies: Penicillin, Sulfa. Hypertension, T2DM (HbA1c 7.2%), Osteoarthritis knee, Hypothyroidism. Meds: Amlodipine, Metformin, Calcium, Thyroxine. Recent: Chest pain admission Apr 2025 — cardiac ruled out, stress-related.')">
+          <div style="display:flex;align-items:center;gap:10px"><div style="width:36px;height:36px;background:var(--purple-l);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2" stroke-linecap="round"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/></svg></div><div><div style="font-size:13px;font-weight:700;color:var(--text)">Ask AyuAI about Sunita</div><div style="font-size:11px;color:var(--muted);margin-top:2px">Drug interactions · What to tell ER · Care tips</div></div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2.5" stroke-linecap="round" style="flex-shrink:0;margin-left:auto"><path d="M9 18l6-6-6-6"/></svg></div>
+        </div>
+      </div>
+
+      <!-- DOCUMENTS TAB -->
+      <div id="ep-docs" style="display:none">
+        <div style="background:var(--teal-l);border-radius:12px;padding:11px 14px;display:flex;align-items:center;gap:10px;border:1px solid rgba(29,158,117,.2)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2" stroke-linecap="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+          <div style="flex:1;font-size:12px;color:var(--teal-d);font-weight:700">7 documents will be shared with this passport</div>
+          <span style="font-size:11px;color:var(--teal);font-weight:800;cursor:pointer" onclick="openShareModal()">Edit →</span>
+        </div>
+        <div class="doc-bundle">
+          <div class="db-header"><h4>ATTACHED DOCUMENTS</h4><span class="db-count">7 docs</span></div>
+          <div class="db-item">
+            <div class="db-ic" style="background:var(--blue-l)"><svg viewBox="0 0 24 24" style="stroke:var(--blue)"><path d="M9 3H5a2 2 0 0 0-2 2v4"/><path d="M14 3h4a2 2 0 0 1 2 2v4"/><path d="M3 9a9 9 0 1 0 18 0"/></svg></div>
+            <div style="flex:1"><div class="db-name">Complete Blood Count</div><div class="db-date">Apollo · 12 May 2025</div></div>
+            <div class="db-chk"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          </div>
+          <div class="db-item">
+            <div class="db-ic" style="background:var(--green-l)"><svg viewBox="0 0 24 24" style="stroke:var(--green)"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+            <div style="flex:1"><div class="db-name">Dr. Sharma — Cardiology Rx</div><div class="db-date">Apollo · 9 May 2025</div></div>
+            <div class="db-chk"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          </div>
+          <div class="db-item">
+            <div class="db-ic" style="background:var(--blue-l)"><svg viewBox="0 0 24 24" style="stroke:var(--blue)"><path d="M9 3H5a2 2 0 0 0-2 2v4"/><path d="M14 3h4a2 2 0 0 1 2 2v4"/><path d="M3 9a9 9 0 1 0 18 0"/></svg></div>
+            <div style="flex:1"><div class="db-name">HbA1c + Lipid Panel</div><div class="db-date">Thyrocare · 15 Apr 2025</div></div>
+            <div class="db-chk"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          </div>
+          <div class="db-item">
+            <div class="db-ic" style="background:var(--purple-l)"><svg viewBox="0 0 24 24" style="stroke:var(--purple)"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 12h8M12 8v8"/></svg></div>
+            <div style="flex:1"><div class="db-name">Right Knee X-Ray</div><div class="db-date">Manipal · 22 Apr 2025</div></div>
+            <div class="db-chk"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          </div>
+          <div class="db-item">
+            <div class="db-ic" style="background:var(--amber-l)"><svg viewBox="0 0 24 24" style="stroke:var(--amber)"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+            <div style="flex:1"><div class="db-name">Discharge Summary — Fortis</div><div class="db-date">Fortis · 8 Apr 2025</div></div>
+            <div class="db-chk"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          </div>
+          <div class="db-item">
+            <div class="db-ic" style="background:var(--green-l)"><svg viewBox="0 0 24 24" style="stroke:var(--green)"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+            <div style="flex:1"><div class="db-name">Dr. Iyer — Orthopaedics Rx</div><div class="db-date">Manipal · 3 Mar 2025</div></div>
+            <div class="db-chk"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          </div>
+          <div class="db-item">
+            <div class="db-ic" style="background:var(--blue-l)"><svg viewBox="0 0 24 24" style="stroke:var(--blue)"><path d="M9 3H5a2 2 0 0 0-2 2v4"/><path d="M14 3h4a2 2 0 0 1 2 2v4"/><path d="M3 9a9 9 0 1 0 18 0"/></svg></div>
+            <div style="flex:1"><div class="db-name">Thyroid Function Test (TSH)</div><div class="db-date">Metropolis · 18 Mar 2025</div></div>
+            <div class="db-chk"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          </div>
+        </div>
+        <div class="db-add" onclick="go('sc-vault')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <span>Add more documents from vault</span>
+        </div>
+        <button style="width:100%;padding:14px;background:var(--red);border:none;border-radius:14px;font-size:14px;font-weight:800;color:#fff;cursor:pointer;font-family:var(--f)" onclick="openShareModal()">
+          Share All 7 Documents →
+        </button>
+      </div>
+
+      <!-- CONTACTS TAB -->
+      <div id="ep-con" style="display:none">
+        <div class="card">
+          <div class="sec-l" style="margin-bottom:10px">Emergency contacts</div>
+          <div class="cr"><div class="cav cv-t">RK</div><div style="flex:1"><div class="cn">Raj Kumar</div><div class="crel">Son · Primary caretaker</div></div><button class="cbtn" onclick="toast('Calling Raj Kumar…')"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.69 3.22 2 2 0 0 1 3.67 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.69a16 16 0 0 0 6.02 6.02l1.06-1.06a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Call</button></div>
+          <div class="cr"><div class="cav cv-b">VM</div><div style="flex:1"><div class="cn">Vijay Mehta</div><div class="crel">Husband · Secondary</div></div><button class="cbtn" onclick="toast('Calling Vijay Mehta…')"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.69 3.22 2 2 0 0 1 3.67 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.69a16 16 0 0 0 6.02 6.02l1.06-1.06a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Call</button></div>
+          <div class="cr"><div class="cav cv-a">DS</div><div style="flex:1"><div class="cn">Dr. R. Sharma</div><div class="crel">Cardiologist · Apollo</div></div><button class="cbtn" onclick="toast('Calling Dr. Sharma…')"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.69 3.22 2 2 0 0 1 3.67 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.69a16 16 0 0 0 6.02 6.02l1.06-1.06a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Call</button></div>
+        </div>
+        <div class="card" style="border-color:var(--red-m)">
+          <div class="sec-l" style="margin-bottom:10px;color:var(--red)">Ambulance</div>
+          <div class="cr"><div class="cav" style="background:var(--red-l);color:var(--red)">108</div><div style="flex:1"><div class="cn">National Ambulance</div><div class="crel">24/7 emergency</div></div><button class="cbtn" style="background:var(--red-l);color:var(--red)" onclick="toast('Calling 108…')"><svg viewBox="0 0 24 24" style="stroke:var(--red)"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.69 3.22 2 2 0 0 1 3.67 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.69a16 16 0 0 0 6.02 6.02l1.06-1.06a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Call</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ MEDS ═══════ -->
+  <div class="scr" id="sc-meds">
+    <div class="mhdr"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><h2>Medication Tracker</h2><p>Sunita Mehta · Sunday, 31 May</p></div><div onclick="openAI('meds','Sunita Mehta 68F. Amlodipine 5mg morning, Metformin 500mg BD, Calcium 500mg after lunch, Thyroxine 50mcg empty stomach. Hypertension, T2DM, Osteoarthritis, Hypothyroidism.')" style="background:rgba(255,255,255,.2);border-radius:10px;padding:7px 12px;cursor:pointer;font-size:11px;font-weight:800;color:#fff">Ask AI ✦</div></div></div>
+    <div class="sl"><div class="sp">
+      <div class="card">
+        <div style="font-size:10px;font-weight:800;color:var(--amber);letter-spacing:.07em;text-transform:uppercase;margin-bottom:10px">Today's schedule</div>
+        <div class="dc"><span class="dt">7:00 AM</span><div style="flex:1"><div class="dbn">Amlodipine 5mg</div><div class="dbc">Hypertension · with water</div></div><button class="chk ck-y"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></button></div>
+        <div class="dc"><span class="dt">8:00 AM</span><div style="flex:1"><div class="dbn">Metformin 500mg</div><div class="dbc">Diabetes · after breakfast</div></div><button class="chk ck-y"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></button></div>
+        <div class="dc" id="dc-cal" style="border:1px solid var(--amber-l)"><span class="dt">1:00 PM</span><div style="flex:1"><div class="dbn">Calcium 500mg</div><div class="dbc">Bone health · after lunch</div></div><button class="chk ck-n" id="cal-btn" onclick="markDose()"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg></button></div>
+        <div class="dc"><span class="dt">8:00 PM</span><div style="flex:1"><div class="dbn">Metformin 500mg</div><div class="dbc">Diabetes · after dinner</div></div><button class="chk ck-n" onclick="toast('Reminder set for 8 PM')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg></button></div>
+      </div>
+      <div class="cfbox"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><circle cx="12" cy="17" r=".5" fill="var(--amber)"/></svg><div><h4>Verify with doctor</h4><p>Amlodipine + Metformin — potential interaction flagged. Discuss with Dr. Sharma at next visit.</p></div></div>
+      <div class="sec-l">All medications</div>
+      <div class="card">
+        <div class="mr"><div><div class="mrn">Amlodipine 5mg</div><div class="mrc">Hypertension · Dr. Sharma</div></div><span style="background:var(--blue-l);color:#0C447C;font-size:10px;font-weight:800;padding:3px 8px;border-radius:6px">Active</span></div>
+        <div class="mr"><div><div class="mrn">Metformin 500mg</div><div class="mrc">Type 2 Diabetes · Dr. Nair</div></div><span style="background:var(--blue-l);color:#0C447C;font-size:10px;font-weight:800;padding:3px 8px;border-radius:6px">Active</span></div>
+        <div class="mr"><div><div class="mrn">Calcium 500mg</div><div class="mrc">Bone health · Dr. Iyer</div></div><span style="background:var(--blue-l);color:#0C447C;font-size:10px;font-weight:800;padding:3px 8px;border-radius:6px">Active</span></div>
+        <div class="mr"><div><div class="mrn">Thyroxine 50mcg</div><div class="mrc">Hypothyroidism · Dr. Menon</div></div><span style="background:var(--blue-l);color:#0C447C;font-size:10px;font-weight:800;padding:3px 8px;border-radius:6px">Active</span></div>
+      </div>
+      <div class="card card-s" style="border-left:3px solid var(--teal)">
+        <div class="sec-l" style="margin-bottom:6px">Weekly check-in</div>
+        <p style="font-size:12px;color:#555;line-height:1.55">How are you feeling this week, Sunita?</p>
+        <div style="display:flex;gap:10px;margin-top:10px">
+          <button onclick="toast('Response sent to Raj ✓')" style="flex:1;padding:10px;background:var(--green-l);border:1px solid #bbf7d0;border-radius:10px;font-size:20px;cursor:pointer">😊</button>
+          <button onclick="toast('Response sent to Raj ✓')" style="flex:1;padding:10px;background:var(--amber-l);border:1px solid #FAC775;border-radius:10px;font-size:20px;cursor:pointer">😐</button>
+          <button onclick="toast('Response sent to Raj ✓')" style="flex:1;padding:10px;background:var(--red-l);border:1px solid var(--red-m);border-radius:10px;font-size:20px;cursor:pointer">😔</button>
+        </div>
+      </div>
+    </div></div>
+    <nav class="nav">
+      <button class="nb" onclick="go('sc-home')"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></button>
+      <button class="nb" onclick="go('sc-vault')"><svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg><span>Vault</span></button>
+      <button class="nb" onclick="go('sc-scanner')"><svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg><span>Scanner</span></button>
+      <button class="nb" onclick="go('sc-ep')"><svg viewBox="0 0 24 24"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z"/></svg><span>EP</span></button>
+      <button class="nb on" onclick="go('sc-meds')"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg><span>Meds</span></button>
+    </nav>
+  </div>
+</div><!-- /shell -->
+
+<!-- ═══════ SHARE MODAL ═══════ -->
+<div class="share-ov" id="share-ov" onclick="if(event.target===this)closeShareModal()">
+  <div class="share-panel">
+    <div class="hdl"></div>
+    <div class="share-panel-hdr">
+      <h3>Share Emergency Passport</h3>
+      <p>Sunita Mehta · 7 documents included</p>
+    </div>
+    <div class="share-opts">
+      <div class="share-opt so-wa" onclick="doShare('WhatsApp')">
+        <div class="so-ic"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12.05 2A10 10 0 0 0 2 12c0 1.76.46 3.4 1.27 4.84L2 22l5.31-1.35A9.94 9.94 0 0 0 12.05 22C17.55 22 22 17.55 22 12.05 22 6.55 17.55 2 12.05 2z"/></svg></div>
+        <div class="so-info"><h4>WhatsApp</h4><p>Send to doctor or family · Instant</p></div>
+      </div>
+      <div class="share-opt so-pdf" onclick="doShare('PDF export')">
+        <div class="so-ic"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+        <div class="so-info"><h4>Export as PDF</h4><p>Doctor-ready printable · All docs bundled</p></div>
+      </div>
+      <div class="share-opt so-link" onclick="shareLink();closeShareModal()">
+        <div class="so-ic"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
+        <div class="so-info"><h4>Shareable Link</h4><p>24-hour secure access link</p></div>
+      </div>
+      <div class="share-opt so-email" onclick="doShare('Email')">
+        <div class="so-ic"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+        <div class="so-info"><h4>Email</h4><p>Send with full document bundle attached</p></div>
+      </div>
+    </div>
+    <div class="doc-sel-section">
+      <div class="doc-sel-label">Documents to include</div>
+      <div class="doc-toggle"><span class="doc-toggle-name">Complete Blood Count</span><span class="doc-toggle-date">12 May</span><div class="toggle-sw" onclick="this.classList.toggle('off')"></div></div>
+      <div class="doc-toggle"><span class="doc-toggle-name">Dr. Sharma — Cardiology Rx</span><span class="doc-toggle-date">9 May</span><div class="toggle-sw" onclick="this.classList.toggle('off')"></div></div>
+      <div class="doc-toggle"><span class="doc-toggle-name">HbA1c + Lipid Panel</span><span class="doc-toggle-date">15 Apr</span><div class="toggle-sw" onclick="this.classList.toggle('off')"></div></div>
+      <div class="doc-toggle"><span class="doc-toggle-name">Right Knee X-Ray</span><span class="doc-toggle-date">22 Apr</span><div class="toggle-sw" onclick="this.classList.toggle('off')"></div></div>
+      <div class="doc-toggle"><span class="doc-toggle-name">Fortis Discharge Summary</span><span class="doc-toggle-date">8 Apr</span><div class="toggle-sw" onclick="this.classList.toggle('off')"></div></div>
+      <div class="doc-toggle"><span class="doc-toggle-name">Dr. Iyer — Orthopaedics Rx</span><span class="doc-toggle-date">3 Mar</span><div class="toggle-sw off" onclick="this.classList.toggle('off')"></div></div>
+      <div class="doc-toggle"><span class="doc-toggle-name">Thyroid Function Test</span><span class="doc-toggle-date">18 Mar</span><div class="toggle-sw off" onclick="this.classList.toggle('off')"></div></div>
+    </div>
+    <button class="share-go-btn" onclick="doShare('WhatsApp')">Share via WhatsApp →</button>
+  </div>
+</div>
+
+<!-- AI PANEL -->
+<div class="ai-ov" id="ai-ov" onclick="if(event.target===this)closeAI()">
+  <div class="ai-panel">
+    <div class="ai-handle"></div>
+    <div class="ai-hdr">
+      <div class="ai-dot"></div>
+      <h3 id="ai-title">AyuAI</h3>
+      <button class="ai-close" onclick="closeAI()">✕</button>
+    </div>
+    <div class="ai-ctx"><div class="ai-ctx-l">Context</div><div class="ai-ctx-v" id="ai-ctx-v"></div></div>
+    <div class="ai-msgs" id="ai-msgs"></div>
+    <div class="sugg-row" id="sugg-row"></div>
+    <div class="ai-inp">
+      <input id="ai-in" placeholder="Ask about this record…" onkeydown="if(event.key==='Enter')sendMsg()">
+      <button class="send-btn" onclick="sendMsg()"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-el" id="toast-el"></div>
+
+<script>
+// ─── NAVIGATION ───
+function go(id){
+  document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+}
+
+// ─── EP TABS ───
+function epTab(el,tabId){
+  document.querySelectorAll('.etab').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+  ['ep-med','ep-docs','ep-con'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.style.display=id===tabId?'':'none';
+  });
+}
+
+// ─── CHIPS ───
+function chipFilter(el,type){
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
+  el.classList.add('on');
+  document.querySelectorAll('.di').forEach(d=>{
+    d.style.display=(type==='all'||d.dataset.t===type)?'':'none';
+  });
+}
+function filterDocs(q){
+  q=q.toLowerCase();
+  document.querySelectorAll('.di').forEach(d=>{
+    const t=d.querySelector('.dn').textContent.toLowerCase()+d.querySelector('.dm').textContent.toLowerCase();
+    d.style.display=t.includes(q)?'':'none';
+  });
+}
+
+// ─── DOSE ───
+function markDose(){
+  const btn=document.getElementById('cal-btn');
+  btn.className='chk ck-y';
+  btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>';
+  document.getElementById('dc-cal').style.border='1px solid var(--border)';
+  toast('Calcium marked taken · Raj notified ✓');
+}
+
+// ─── TOAST ───
+let toastT;
+function toast(msg){
+  const el=document.getElementById('toast-el');
+  el.textContent=msg; el.classList.add('on');
+  clearTimeout(toastT);
+  toastT=setTimeout(()=>el.classList.remove('on'),2800);
+}
+
+// ─── SHARE ───
+function openShareModal(){document.getElementById('share-ov').classList.add('on')}
+function closeShareModal(){document.getElementById('share-ov').classList.remove('on')}
+function shareLink(){
+  if(navigator.clipboard){navigator.clipboard.writeText('https://ayucare.app/ep/sunita-mehta-b7k2x')}
+  toast('Secure link copied · Expires in 24 hours 🔗');
+  closeShareModal();
+}
+function doShare(method){
+  closeShareModal();
+  const msgs={
+    'WhatsApp':'Emergency Passport sent via WhatsApp to Dr. Sharma ✓',
+    'PDF export':'Generating PDF with 7 documents… ✓',
+    'Email':'Email sent with document bundle ✓'
+  };
+  toast(msgs[method]||`Shared via ${method} ✓`);
+}
+
+// ─── SCAN METHOD ───
+function setMethod(m,el){
+  document.querySelectorAll('.sm-pill').forEach(p=>p.classList.remove('on'));
+  el.classList.add('on');
+}
+
+// ─── FILE HANDLER ───
+function handleDrop(e){
+  e.preventDefault();
+  document.getElementById('upload-zone').classList.remove('drag');
+  const file=e.dataTransfer.files[0];
+  if(file) processFile(file);
+}
+function handleFile(e){
+  const file=e.target.files[0];
+  if(file) processFile(file);
+}
+function processFile(file){
+  const isImg=file.type.startsWith('image/');
+  if(isImg){
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      document.getElementById('preview-img').src=ev.target.result;
+      document.getElementById('upload-zone').style.display='none';
+      document.getElementById('img-preview').style.display='block';
+      document.getElementById('img-tag').textContent=file.name.split('.')[0];
+      runAIScan(ev.target.result, file.name);
+    };
+    reader.readAsDataURL(file);
+  } else {
+    // PDF or other — simulate without real image
+    document.getElementById('upload-zone').style.display='none';
+    document.getElementById('ai-scan-badge').style.display='flex';
+    runAIScanText(file.name);
+  }
+}
+
+// ─── AI SCAN (real image via Claude Vision) ───
+async function runAIScan(dataUrl, fileName){
+  document.getElementById('ai-scan-badge').style.display='inline-flex';
+  document.getElementById('ai-process-box').style.display='block';
+  document.getElementById('extracted-card').style.display='none';
+  document.getElementById('action-row').style.display='none';
+
+  // Step 1
+  await animateStep('step1','step1-l','step1-s','Analysing image quality…',800);
+  // Step 2
+  await animateStep('step2','step2-l','step2-s','Reading text & values…',600);
+  // Step 3 — real API call
+  markStepActive('step3','step3-l','step3-s','AI extracting structured data…');
+
+  try {
+    const base64=dataUrl.split(',')[1];
+    const mediaType=dataUrl.split(';')[0].split(':')[1];
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:900,
+        system:`You are AyuAI, a medical document scanner inside AyuCare. Analyse the uploaded health document image and extract structured data. 
+Return ONLY valid JSON in this exact format (no markdown, no explanation):
+{
+  "docType": "Lab Report|Prescription|Discharge Summary|Scan Report|Bill|Other",
+  "title": "document title",
+  "source": "hospital/lab name",
+  "date": "date found or estimated",
+  "fields": [
+    {"label": "Field Name", "value": "extracted value", "flag": "ok|hi|lo|none"}
+  ],
+  "insight": "2-3 sentence plain-language health insight for a family caregiver. Highlight any abnormal values, what they mean, and what action to take. Be warm and clear."
+}
+Extract up to 8 key fields. Use flag: "hi" for high values, "lo" for low values, "ok" for normal, "none" for non-numeric fields.`,
+        messages:[{
+          role:'user',
+          content:[
+            {type:'image',source:{type:'base64',media_type:mediaType,data:base64}},
+            {type:'text',text:'Extract all medical data from this health document. Return only JSON.'}
+          ]
+        }]
+      })
+    });
+    const data=await res.json();
+    markStepDone('step3','step3-l','step3-s','Structured data extracted');
+    await animateStep('step4','step4-l','step4-s','Generating health insights…',500);
+
+    let parsed;
+    try{
+      const raw=data.content[0].text;
+      parsed=JSON.parse(raw.replace(/```json|```/g,'').trim());
+    }catch(e){
+      parsed=getFallback(fileName);
+    }
+    showExtracted(parsed);
+  } catch(err){
+    markStepDone('step3','step3-l','step3-s','Using demo data (API unavailable)');
+    await animateStep('step4','step4-l','step4-s','Generating health insights…',400);
+    showExtracted(getFallback(fileName));
+  }
+}
+
+async function runAIScanText(fileName){
+  document.getElementById('ai-process-box').style.display='block';
+  await animateStep('step1','step1-l','step1-s','Reading document…',600);
+  await animateStep('step2','step2-l','step2-s','Parsing text content…',700);
+  await animateStep('step3','step3-l','step3-s','AI extracting structured data…',800);
+  await animateStep('step4','step4-l','step4-s','Generating health insights…',500);
+  showExtracted(getFallback(fileName));
+}
+
+function getFallback(fileName){
+  return {
+    docType:'Lab Report',
+    title:'Complete Blood Count (CBC)',
+    source:'Apollo Diagnostics',
+    date:'12 May 2025',
+    fields:[
+      {label:'Haemoglobin',value:'11.2 g/dL',flag:'lo'},
+      {label:'WBC',value:'7,200 /µL',flag:'ok'},
+      {label:'Platelets',value:'2,10,000 /µL',flag:'ok'},
+      {label:'Neutrophils',value:'68%',flag:'ok'},
+      {label:'Lymphocytes',value:'24%',flag:'ok'},
+      {label:'MCV',value:'72 fL',flag:'lo'},
+    ],
+    insight:'Haemoglobin at 11.2 g/dL is slightly low, indicating mild anaemia — common in elderly women. **MCV of 72 fL** points to iron-deficiency anaemia. Recommend discussing iron supplementation with Dr. Sharma at the next visit. All other values are within normal range.'
+  };
+}
+
+function animateStep(stepId,labelId,spinId,text,delay){
+  return new Promise(resolve=>{
+    markStepActive(stepId,labelId,spinId,text);
+    setTimeout(()=>{
+      markStepDone(stepId,labelId,spinId,text);
+      resolve();
+    },delay);
+  });
+}
+function markStepActive(stepId,labelId,spinId,text){
+  document.getElementById(stepId).style.opacity='1';
+  document.getElementById(labelId).textContent=text;
+  document.getElementById(labelId).className='step-label active';
+  document.getElementById(spinId).style.display='block';
+}
+function markStepDone(stepId,labelId,spinId,text){
+  document.getElementById(labelId).className='step-label done';
+  document.getElementById(spinId).style.display='none';
+  const stepEl=document.getElementById(stepId);
+  const existDone=stepEl.querySelector('.step-done');
+  if(!existDone){
+    const doneEl=document.createElement('div');
+    doneEl.className='step-done';
+    doneEl.innerHTML='<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
+    stepEl.appendChild(doneEl);
+  }
+}
+
+function showExtracted(data){
+  document.getElementById('ec-title').textContent=data.title||'Document';
+  document.getElementById('ec-sub').textContent=(data.source||'')+(data.date?' · '+data.date:'');
+  const fieldsEl=document.getElementById('ec-fields');
+  fieldsEl.innerHTML='<div style="height:10px"></div>'+
+    (data.fields||[]).map(f=>`
+      <div class="ec-field">
+        <span class="ecf-label">${f.label}</span>
+        <span class="ecf-val">${f.value}</span>
+        ${f.flag&&f.flag!=='none'?`<span class="ecf-flag flag-${f.flag}">${f.flag==='hi'?'▲ HIGH':f.flag==='lo'?'▼ LOW':'✓ OK'}</span>`:''}
+      </div>`).join('');
+
+  document.getElementById('aib-text').innerHTML=
+    (data.insight||'').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
+
+  document.getElementById('extracted-card').style.display='block';
+  document.getElementById('action-row').style.display='flex';
+
+  // Tag update
+  const typeColors={
+    'Lab Report':'var(--blue-l)','Prescription':'var(--green-l)',
+    'Discharge Summary':'var(--amber-l)','Scan Report':'var(--purple-l)'
+  };
+  document.getElementById('img-tag').textContent=data.docType||'Document';
+}
+
+function resetScanner(){
+  document.getElementById('upload-zone').style.display='flex';
+  document.getElementById('img-preview').style.display='none';
+  document.getElementById('ai-process-box').style.display='none';
+  document.getElementById('extracted-card').style.display='none';
+  document.getElementById('action-row').style.display='none';
+  document.getElementById('ai-scan-badge').style.display='none';
+  document.getElementById('file-input').value='';
+}
+
+function saveToVault(){
+  toast('Document saved to vault · Added to Emergency Passport ✓');
+  setTimeout(()=>resetScanner(),1500);
+}
+
+// ─── AI CHAT ───
+let chatHistory=[];
+let aiMode='doc';
+let aiCtx='';
+const SYSTEMS={
+  doc:`You are AyuAI inside AyuCare. A health record is loaded. Summarise in plain English, flag abnormal values with ⚠, explain medical jargon simply. Highlight diagnosis, key values, follow-up actions. Use **bold** for key terms. Keep responses concise. Never give definitive medical advice — suggest consulting the doctor.`,
+  meds:`You are AyuAI inside AyuCare. A patient's medication list is loaded. Check interactions, explain what each medicine does simply, give adherence tips. Be warm and practical. Never tell patients to stop medications.`,
+  ep:`You are AyuAI inside AyuCare's Emergency Passport. Help prepare for emergencies — what to tell ER, key info to highlight, verbal handover script. Be calm, clear, actionable.`,
+  general:`You are AyuAI in AyuCare. Answer health questions in plain, warm language. Use Indian context. Recommend consulting a doctor for specific decisions.`
+};
+const SUGGS={
+  doc:['Summarise this report','What are the abnormal values?','What should we do next?','Explain in simple terms'],
+  meds:['Any drug interactions?','Best time to take each?','Side effects to watch?','Tips for adherence'],
+  ep:['What to tell the ER?','Write a handover script','Most critical info?','Which documents to show first?'],
+  general:['Managing diabetes at 68?','BP tips for elderly','When to go to ER?','Calcium absorption tips']
+};
+
+function openAI(mode,context){
+  aiMode=mode; aiCtx=context; chatHistory=[];
+  const titles={doc:'AyuAI — Document Analysis',meds:'AyuAI — Medication Assistant',ep:'AyuAI — Emergency Advisor',general:'AyuAI — Health Assistant'};
+  document.getElementById('ai-title').textContent=titles[mode]||'AyuAI';
+  document.getElementById('ai-ctx-v').textContent=context.length>110?context.slice(0,110)+'…':context;
+  document.getElementById('ai-msgs').innerHTML='';
+  const suggs=SUGGS[mode]||SUGGS.general;
+  document.getElementById('sugg-row').innerHTML=suggs.map(s=>`<span class="sugg" onclick="sendSugg('${s}')">${s}</span>`).join('');
+  const openers={doc:"I've loaded this health record. I can summarise it, flag abnormal values, or answer any questions.",meds:"I've loaded Sunita's medication list. Ask me about interactions, what each medicine does, or adherence tips.",ep:"I've loaded Sunita's full profile. I can help you prepare for an emergency — handover script, key info, questions to ask.",general:"Hi! I'm AyuAI. Ask me anything about health, medications, or records."};
+  addMsg('assistant',openers[mode]||openers.general);
+  document.getElementById('ai-ov').classList.add('on');
+  document.getElementById('ai-in').focus();
+}
+function closeAI(){document.getElementById('ai-ov').classList.remove('on')}
+function addMsg(role,text){
+  const el=document.getElementById('ai-msgs');
+  const div=document.createElement('div');
+  div.className='msg '+(role==='user'?'msg-u':'msg-a');
+  div.innerHTML=text.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
+  el.appendChild(div); el.scrollTop=el.scrollHeight;
+}
+function showTyping(){
+  const el=document.getElementById('ai-msgs');
+  const d=document.createElement('div'); d.className='msg msg-a'; d.id='typing';
+  d.innerHTML='<div class="typing"><span></span><span></span><span></span></div>';
+  el.appendChild(d); el.scrollTop=el.scrollHeight;
+}
+function removeTyping(){const e=document.getElementById('typing');if(e)e.remove()}
+function sendSugg(t){document.getElementById('ai-in').value=t;sendMsg()}
+async function sendMsg(){
+  const inp=document.getElementById('ai-in');
+  const text=inp.value.trim(); if(!text) return;
+  inp.value='';
+  document.getElementById('sugg-row').innerHTML='';
+  addMsg('user',text); chatHistory.push({role:'user',content:text}); showTyping();
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',max_tokens:500,
+        system:SYSTEMS[aiMode]+'\n\nPatient context:\n'+aiCtx,
+        messages:chatHistory.map(m=>({role:m.role,content:m.content}))
+      })
+    });
+    const data=await res.json(); removeTyping();
+    if(data.content&&data.content[0]){
+      const reply=data.content[0].text;
+      chatHistory.push({role:'assistant',content:reply});
+      addMsg('assistant',reply);
+    } else {
+      addMsg('assistant','⚠ '+(data.error?.message||'API error. Check your connection.'));
+    }
+  } catch(e){
+    removeTyping();
+    addMsg('assistant','⚠ Could not reach AyuAI. Check internet connection.');
+  }
+}
+</script>
+</body>
+</html>
